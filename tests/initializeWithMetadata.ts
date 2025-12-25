@@ -84,15 +84,15 @@ describe("vault-contracts-2", () => {
     // Execute the transaction using BanksClient
     await processTransactionMaybeThrow(context.banksClient, tx);
 
-    // // Fetch and verify vault account
-    // const vaultAccount = await program.account.vault.fetch(vaultPda);
-
-    // expect(vaultAccount.authority.toString()).to.equal(adminPubkey.toString());
-    // expect(vaultAccount.lpMint.toString()).to.equal(lpMint.toString());
-    // expect(vaultAccount.totalLpSupply.toNumber()).to.equal(0);
-    // expect(vaultAccount.numAssets).to.equal(0);
-    // expect(vaultAccount.admin.toString()).to.equal(adminPubkey.toString());
-    // expect(vaultAccount.bump).to.equal(vaultBump);
+    const acc = await context.banksClient.getAccount(vaultPda);
+    const vaultAccount = program.coder.accounts.decode("vault", Buffer.from(acc!.data));
+    // Fetch and verify vault account
+    expect(vaultAccount.authority.toString()).to.equal(adminPubkey.toString());
+    expect(vaultAccount.lpMint.toString()).to.equal(lpMint.toString());
+    expect(vaultAccount.totalLpSupply.toNumber()).to.equal(0);
+    expect(vaultAccount.numAssets).to.equal(0);
+    expect(vaultAccount.admin.toString()).to.equal(adminPubkey.toString());
+    expect(vaultAccount.bump).to.equal(vaultBump);
 
     // Verify LP mint account exists
     const lpMintAccount = await context.banksClient.getAccount(lpMint);
