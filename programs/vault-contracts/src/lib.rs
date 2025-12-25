@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+pub mod ids;
 pub mod instructions;
 pub mod state;
 
@@ -11,6 +12,14 @@ pub mod vault {
     use super::*;
     pub fn initialize_without_metadata(ctx: Context<InitializeVaultWithoutMetadata>) -> Result<()> {
         initialize_vault_without_metadata(ctx).unwrap();
+        Ok(())
+    }
+
+    pub fn initialize_with_metadata(
+        ctx: Context<InitializeVaultWithMetadata>,
+        params: InitializeVaultMetadataParams,
+    ) -> Result<()> {
+        initialize_vault_with_metadata(ctx, params).unwrap();
         Ok(())
     }
 }

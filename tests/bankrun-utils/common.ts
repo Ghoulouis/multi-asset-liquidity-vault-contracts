@@ -1,7 +1,10 @@
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { BanksClient, startAnchor } from "solana-bankrun";
-import { VAULT_PROGRAM_ID } from "./constants";
+import { METAPLEX_PROGRAM_ID, VAULT_PROGRAM_ID } from "./constants";
 import { BN } from "@coral-xyz/anchor";
+import fs from "fs";
+
+const metadataProgramBinary = fs.readFileSync("dump/metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s.so");
 
 export async function startTest(root: Keypair) {
   return startAnchor(
@@ -10,6 +13,10 @@ export async function startTest(root: Keypair) {
       {
         name: "vault",
         programId: new PublicKey(VAULT_PROGRAM_ID),
+      },
+      {
+        name: "mpl_token_metadata",
+        programId: new PublicKey(METAPLEX_PROGRAM_ID),
       },
     ],
     [
