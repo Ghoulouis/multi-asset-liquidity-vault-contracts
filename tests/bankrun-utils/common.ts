@@ -1,12 +1,20 @@
-import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  clusterApiUrl,
+} from "@solana/web3.js";
 import { BanksClient, startAnchor } from "solana-bankrun";
-import { METAPLEX_PROGRAM_ID, VAULT_PROGRAM_ID } from "./constants";
+import { BTC_USDC_FEED, METAPLEX_PROGRAM_ID, VAULT_PROGRAM_ID } from "./constants";
 import { BN } from "@coral-xyz/anchor";
 import fs from "fs";
 
-const metadataProgramBinary = fs.readFileSync("dump/metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s.so");
-
 export async function startTest(root: Keypair) {
+  const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed");
+  const btcFeedAccountInfo = await connection.getAccountInfo(BTC_USDC_FEED);
   return startAnchor(
     "./",
     [
@@ -27,6 +35,15 @@ export async function startTest(root: Keypair) {
           owner: SystemProgram.programId,
           lamports: LAMPORTS_PER_SOL * 100,
           data: new Uint8Array(),
+        },
+      },
+      {
+        address: BTC_USDC_FEED,
+        info: {
+          executable: false,
+          owner: btcFeedAccountInfo?.owner || SystemProgram.programId,
+          lamports: btcFeedAccountInfo?.lamports || 1000000,
+          data: btcFeedAccountInfo?.data || new Uint8Array(),
         },
       },
     ]

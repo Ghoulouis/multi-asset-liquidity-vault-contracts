@@ -1,6 +1,8 @@
 use anchor_lang::prelude::*;
+pub mod error;
 pub mod ids;
 pub mod instructions;
+pub mod math;
 pub mod state;
 
 use instructions::*;
@@ -20,6 +22,11 @@ pub mod vault {
         params: InitializeVaultMetadataParams,
     ) -> Result<()> {
         initialize_vault_with_metadata(ctx, params).unwrap();
+        Ok(())
+    }
+
+    pub fn fetch_btc_price(ctx: Context<FetchBitcoinPrice>, feed_id_hex: String) -> Result<()> {
+        fetch_pyth_btc_price(ctx, feed_id_hex).unwrap();
         Ok(())
     }
 }
