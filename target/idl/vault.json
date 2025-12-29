@@ -285,6 +285,21 @@
       ]
     }
   ],
+  "events": [
+    {
+      "name": "BitcoinPriceFetched",
+      "discriminator": [
+        53,
+        34,
+        62,
+        25,
+        58,
+        43,
+        156,
+        159
+      ]
+    }
+  ],
   "errors": [
     {
       "code": 6000,
@@ -293,6 +308,30 @@
     }
   ],
   "types": [
+    {
+      "name": "BitcoinPriceFetched",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "price",
+            "type": "i64"
+          },
+          {
+            "name": "conf",
+            "type": "u64"
+          },
+          {
+            "name": "exponent",
+            "type": "i32"
+          },
+          {
+            "name": "feed_id_hex",
+            "type": "string"
+          }
+        ]
+      }
+    },
     {
       "name": "InitializeVaultMetadataParams",
       "type": {

@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { AnchorProvider, Program, Wallet } from "@coral-xyz/anchor";
+import { AnchorProvider, Program, Wallet, BN } from "@coral-xyz/anchor";
 import { ProgramTestContext, startAnchor } from "solana-bankrun";
 import { generateKpAndFund, processTransactionMaybeThrow, startTest } from "./bankrun-utils/common";
 import { Keypair, PublicKey, SystemProgram, LAMPORTS_PER_SOL, Connection, clusterApiUrl } from "@solana/web3.js";
@@ -51,5 +51,23 @@ describe("fetchBtcPrice", () => {
     const transactionMeta = await context.banksClient.tryProcessTransaction(tx);
     // Verify transaction was successful (no errors)
     expect(transactionMeta.result).to.be.null;
+
+    // Parse and verify event was emitted
+    const logs = transactionMeta.meta?.logMessages || [];
+
+    // Parse events from logs using EventParser (returns a Generator)
+    const eventParser = new anchor.EventParser(program.programId, program.coder);
+    const events = Array.from(eventParser.parseLogs(logs));
+
+    // Verify BitcoinPriceFetched event was emitted
+    expect(events.length).to.be.greaterThan(0);
+    const priceEvent = events.find((e) => e.name === "bitcoinPriceFetched");
+    expect(priceEvent).to.not.be.undefined;
+    expect(priceEvent?.data.feedIdHex).to.equal(BTC_USD_FEED_ID_HEX);
+    // Check if price and conf are BN instances (i64 and u64 are decoded as BN)
+    expect(priceEvent?.data.price).to.be.instanceOf(BN);
+    expect(priceEvent?.data.conf).to.be.instanceOf(BN);
+    // exponent is i32, which might be decoded as number or BN depending on Anchor version
+    expect(priceEvent?.data.exponent).to.satisfy((val: any) => typeof val === "number" || val instanceof BN);
   });
 });

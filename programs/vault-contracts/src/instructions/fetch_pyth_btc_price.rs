@@ -18,6 +18,14 @@ pub enum FeedError {
     InvalidPriceFeed,
 }
 
+#[event]
+pub struct BitcoinPriceFetched {
+    pub price: i64,
+    pub conf: u64,
+    pub exponent: i32,
+    pub feed_id_hex: String,
+}
+
 pub fn fetch_pyth_btc_price(ctx: Context<FetchBitcoinPrice>, feed_id_hex: String) -> Result<()> {
     let price_update = &ctx.accounts.price_update;
 
@@ -34,5 +42,13 @@ pub fn fetch_pyth_btc_price(ctx: Context<FetchBitcoinPrice>, feed_id_hex: String
         price.conf,
         price.exponent
     );
+
+    emit!(BitcoinPriceFetched {
+        price: price.price,
+        conf: price.conf,
+        exponent: price.exponent,
+        feed_id_hex: feed_id_hex.clone(),
+    });
+
     Ok(())
 }
