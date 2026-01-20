@@ -303,8 +303,38 @@
   "errors": [
     {
       "code": 6000,
-      "name": "InvalidPriceFeed",
-      "msg": "Invalid Price Feed"
+      "name": "UnableToLoadOracle",
+      "msg": "Unable To Load Oracles"
+    },
+    {
+      "code": 6001,
+      "name": "MathOverflow",
+      "msg": "Math Overflow"
+    },
+    {
+      "code": 6002,
+      "name": "MathError",
+      "msg": "Math Error"
+    },
+    {
+      "code": 6003,
+      "name": "DivisionByZero",
+      "msg": "Division By Zero"
+    },
+    {
+      "code": 6004,
+      "name": "CastingFailure",
+      "msg": "Casting Failure"
+    },
+    {
+      "code": 6005,
+      "name": "MultipleLargerThanOraclePrecision",
+      "msg": "Multiple larger than oracle precision"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidOracle",
+      "msg": "Invalid Oracle"
     }
   ],
   "types": [
